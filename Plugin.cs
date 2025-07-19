@@ -25,11 +25,22 @@ public partial class Plugin : BaseUnityPlugin
 
     public void OnEnable()
     {
-        CustomEdible.Object.Init(GUID);
+        InitObjects();
         DevTools.Init();
     }
 
     public void OnDisble()
+    {
+        TerminateObjects();
+        DevTools.Terminate();
+    }
+
+    public static void InitObjects()
+    {
+        CustomEdible.Object.Init(GUID); 
+        DevTools.Init();
+    }
+    public static void TerminateObjects() 
     {
         CustomEdible.Object.Terminate();
         DevTools.Terminate();

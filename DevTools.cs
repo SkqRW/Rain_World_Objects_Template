@@ -7,14 +7,14 @@ public partial class DevTools
 {
     public static void Init()
     {
-        On.Player.Update += PlayerOnUpdate;
-        On.PlayerGraphics.DrawSprites += VisalFormToSeeIfTheModIsAplyed;
+        //On.Player.Update += PlayerOnUpdate;
+        //On.PlayerGraphics.DrawSprites += VisalFormToSeeIfTheModIsAplyed;
     }
 
     public static void Terminate()
     {
-        On.Player.Update -= PlayerOnUpdate;
-        On.PlayerGraphics.DrawSprites -= VisalFormToSeeIfTheModIsAplyed;
+        //On.Player.Update -= PlayerOnUpdate;
+        //On.PlayerGraphics.DrawSprites -= VisalFormToSeeIfTheModIsAplyed;
     }
 
     private static void VisalFormToSeeIfTheModIsAplyed(On.PlayerGraphics.orig_DrawSprites orig, PlayerGraphics self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
@@ -50,7 +50,7 @@ public partial class DevTools
     {
         orig(self, eu);
 
-        /*
+        
         if (Input.GetKeyDown(KeyCode.D))
         {
             DevMode = true;
@@ -60,7 +60,7 @@ public partial class DevTools
         {
             return;
         }
-        */
+        
     
         devTimer++;
 
@@ -77,7 +77,7 @@ public partial class DevTools
             CustomEdible.CustomEdible attemp = new CustomEdible.CustomEdible(temp);
 
             attemp.PlaceInRoom(self.room);
-            ODEBUG.Log("the object placed in the room");
+            ODEBUG.LogInfo("The object placed in the room");
             SetDevTimer(1);
         }
     }

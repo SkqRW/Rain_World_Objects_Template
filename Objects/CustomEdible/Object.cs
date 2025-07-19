@@ -13,7 +13,6 @@ internal class Object
         On.RainWorld.OnModsDisabled += RainWorld_OnModsDisabled;
         On.AbstractPhysicalObject.Realize += AbstractPhysicalObject_Realize;
         On.Player.Grabability += Player_Grabability;
-        On.AbstractPhysicalObject.Realize += AbstractPhysicalObject_RealizeCustom;
         On.DevInterface.ObjectsPage.DevObjectGetCategoryFromPlacedType += ObjectsPage_DevObjectGetCategoryFromPlacedType;
         On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
         On.PlacedObject.ConsumableObjectData.ctor += ConsumableObjectData_ctor;
@@ -29,9 +28,7 @@ internal class Object
         On.RainWorld.OnModsDisabled -= RainWorld_OnModsDisabled;
         On.AbstractPhysicalObject.Realize -= AbstractPhysicalObject_Realize;
         On.Player.Grabability -= Player_Grabability;
-        On.AbstractPhysicalObject.Realize -= AbstractPhysicalObject_RealizeCustom;
         On.Room.Loaded -= Room_Loaded;
-
         On.DevInterface.ObjectsPage.DevObjectGetCategoryFromPlacedType -= ObjectsPage_DevObjectGetCategoryFromPlacedType;
         On.DevInterface.ObjectsPage.CreateObjRep -= ObjectsPage_CreateObjRep;
         On.PlacedObject.ConsumableObjectData.ctor -= ConsumableObjectData_ctor;
@@ -40,6 +37,7 @@ internal class Object
 
     private static void RainWorld_OnModsEnabled(On.RainWorld.orig_OnModsEnabled orig, RainWorld self, ModManager.Mod[] newlyEnabledMods)
     {
+        //Although the original method is empty, other mods can also hook this method, so orig is also required here
         orig(self, newlyEnabledMods);
         Register.RegisterValues();
     }
@@ -48,7 +46,7 @@ internal class Object
     {
         orig(self, newlyDisabledMods);
         foreach (ModManager.Mod mod in newlyDisabledMods)
-            if (mod.id == GUID) 
+            if (mod.id == GUID) //GUID - the ID of your mod in the form of a string variable
                 Register.UnregisterValues();
     }
 
@@ -56,8 +54,9 @@ internal class Object
     {
         orig(self);
         if (self.type == Register.CustomEdible)
-            self.realizedObject = new CustomEdible(self); //Like any physical object, your object will take an abstract object as a parameter. This will be written in more detail later
+            self.realizedObject = new CustomEdible(self); //Like any physical object, your object will take an abstract object as a parameter.
     }
+
 
     private static Player.ObjectGrabability Player_Grabability(On.Player.orig_Grabability orig, Player self, PhysicalObject obj)
     {
@@ -67,41 +66,7 @@ internal class Object
         return orig(self, obj);
     }
 
-    private static void Room_Loaded(On.Room.orig_Loaded orig, Room self)
-    {
-        orig(self);
-
-        if (self.game == null)
-            return;
-
-        for (int num20 = 0; num20 < self.roomSettings.placedObjects.Count; num20++)
-        {
-            var po = self.roomSettings.placedObjects[num20];
-
-            if (self.roomSettings.placedObjects[num20].type == Register.CustomEdible_PO)
-            {
-
-                if (!(self.game.session is StoryGameSession) ||
-                    !(self.game.session as StoryGameSession).saveState.ItemConsumed(self.world, false, self.abstractRoom.index, num20))
-                {
-                    AbstractPhysicalObject abstractPhysicalObject = new AbstractConsumable(
-                        self.world,
-                        Register.CustomEdible,
-                        null,
-                        self.GetWorldCoordinate(self.roomSettings.placedObjects[num20].pos),
-                        self.game.GetNewID(),
-                        self.abstractRoom.index,
-                        num20,
-                        self.roomSettings.placedObjects[num20].data as PlacedObject.ConsumableObjectData);
-                    (abstractPhysicalObject as AbstractConsumable).isConsumed = false;
-                    self.abstractRoom.AddEntity(abstractPhysicalObject);
-                    abstractPhysicalObject.placedObjectOrigin = self.SetAbstractRoomAndPlacedObjectNumber(self.abstractRoom.name, num20);
-
-                }
-            }
-        }
-    }
-
+   
     private static void PlacedObject_GenerateEmptyData(On.PlacedObject.orig_GenerateEmptyData orig, PlacedObject self)
     {
         orig(self);
@@ -143,11 +108,41 @@ internal class Object
         return orig(self, type);
     }
 
-    private static void AbstractPhysicalObject_RealizeCustom(On.AbstractPhysicalObject.orig_Realize orig, AbstractPhysicalObject self)
+
+    private static void Room_Loaded(On.Room.orig_Loaded orig, Room self)
     {
         orig(self);
-        if (self.type == Register.CustomEdible)
-            self.realizedObject = new CustomEdible(self); //Like any physical object, your object will take an abstract object as a parameter. This will be written in more detail later
+
+        if (self.game == null)
+            return;
+
+        for (int i = 0; i < self.roomSettings.placedObjects.Count; i++)
+        {
+            var po = self.roomSettings.placedObjects[i];
+
+            if (self.roomSettings.placedObjects[i].type == Register.CustomEdible_PO)
+            {
+
+                if (!(self.game.session is StoryGameSession) ||
+                    !(self.game.session as StoryGameSession).saveState.ItemConsumed(self.world, false, self.abstractRoom.index, i))
+                {
+                    AbstractPhysicalObject abstractPhysicalObject = new AbstractConsumable(
+                        self.world,
+                        Register.CustomEdible,
+                        null,
+                        self.GetWorldCoordinate(self.roomSettings.placedObjects[i].pos),
+                        self.game.GetNewID(),
+                        self.abstractRoom.index,
+                        i,
+                        self.roomSettings.placedObjects[i].data as PlacedObject.ConsumableObjectData);
+                    (abstractPhysicalObject as AbstractConsumable).isConsumed = false;
+                    self.abstractRoom.AddEntity(abstractPhysicalObject);
+                    abstractPhysicalObject.placedObjectOrigin = self.SetAbstractRoomAndPlacedObjectNumber(self.abstractRoom.name, i);
+
+                }
+            }
+        }
     }
+
 }
 

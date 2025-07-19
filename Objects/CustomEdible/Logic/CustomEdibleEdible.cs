@@ -46,7 +46,7 @@ public partial class CustomEdible
         {
             (grasp.grabber as Player).ObjectEaten(this);
             grasp.Release();
-            //this.Destroy();
+            this.Destroy();
         }
     }
 

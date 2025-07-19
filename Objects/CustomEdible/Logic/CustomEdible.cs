@@ -41,7 +41,6 @@ public partial class CustomEdible : PlayerCarryableItem, IPlayerEdible, IDrawabl
             rotation = (rotation - Custom.PerpendicularVector(rotation) * 0.1f * firstChunk.vel.x).normalized;
             firstChunk.vel.x *= 0.8f;
         }
-        ODEBUG.Log("SHOW THIS IS UPDATE AAHAUOCSDIJAFDBIBIJABJO");
     }
 
     public override void PlaceInRoom(Room placeRoom)
@@ -55,7 +54,6 @@ public partial class CustomEdible : PlayerCarryableItem, IPlayerEdible, IDrawabl
             //Custom.RNV() just sets a random direction
             rotation = Custom.RNV();
             lastRotation = rotation;
-            ODEBUG.Log("tHIS IS BEING CALLED THE PLACEINROOM");
         }
         catch(Exception e)
         {
