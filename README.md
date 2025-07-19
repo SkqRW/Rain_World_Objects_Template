@@ -4,6 +4,9 @@ This is an alpha version still, but his custom edible works with his dev tool in
 
 Later i will imprive this template to add more comments and more examples of differents type of objects
 
+This repository is free to use without attribution.
+You can use, modify, and share it without asking for permission or giving credit.
+
 NOTE: At least the Room_Loader hooks works, i still want to improve, so welcome any suggestions
 
 Push Request are welcome, also if you want some especific example or help me with this templace, you can dm me in discord (@skq_rw)
