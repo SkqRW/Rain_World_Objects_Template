@@ -82,7 +82,7 @@ public partial class DevTools
         }
     }
 
-    //cuenta regresiva en secundos
+    //Regresive count in seconds
     private static void SetDevTimer(int seconds)
     {
         devTimer = -seconds * 40;

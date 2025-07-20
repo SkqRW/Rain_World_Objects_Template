@@ -17,7 +17,6 @@ internal class Object
         On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
         On.PlacedObject.ConsumableObjectData.ctor += ConsumableObjectData_ctor;
         On.PlacedObject.GenerateEmptyData += PlacedObject_GenerateEmptyData;
-        On.Room.Loaded += Room_Loaded;
     }
 
     public static void Terminate()
@@ -28,7 +27,6 @@ internal class Object
         On.RainWorld.OnModsDisabled -= RainWorld_OnModsDisabled;
         On.AbstractPhysicalObject.Realize -= AbstractPhysicalObject_Realize;
         On.Player.Grabability -= Player_Grabability;
-        On.Room.Loaded -= Room_Loaded;
         On.DevInterface.ObjectsPage.DevObjectGetCategoryFromPlacedType -= ObjectsPage_DevObjectGetCategoryFromPlacedType;
         On.DevInterface.ObjectsPage.CreateObjRep -= ObjectsPage_CreateObjRep;
         On.PlacedObject.ConsumableObjectData.ctor -= ConsumableObjectData_ctor;
@@ -109,40 +107,7 @@ internal class Object
     }
 
 
-    private static void Room_Loaded(On.Room.orig_Loaded orig, Room self)
-    {
-        orig(self);
-
-        if (self.game == null)
-            return;
-
-        for (int i = 0; i < self.roomSettings.placedObjects.Count; i++)
-        {
-            var po = self.roomSettings.placedObjects[i];
-
-            if (self.roomSettings.placedObjects[i].type == Register.CustomEdible_PO)
-            {
-
-                if (!(self.game.session is StoryGameSession) ||
-                    !(self.game.session as StoryGameSession).saveState.ItemConsumed(self.world, false, self.abstractRoom.index, i))
-                {
-                    AbstractPhysicalObject abstractPhysicalObject = new AbstractConsumable(
-                        self.world,
-                        Register.CustomEdible,
-                        null,
-                        self.GetWorldCoordinate(self.roomSettings.placedObjects[i].pos),
-                        self.game.GetNewID(),
-                        self.abstractRoom.index,
-                        i,
-                        self.roomSettings.placedObjects[i].data as PlacedObject.ConsumableObjectData);
-                    (abstractPhysicalObject as AbstractConsumable).isConsumed = false;
-                    self.abstractRoom.AddEntity(abstractPhysicalObject);
-                    abstractPhysicalObject.placedObjectOrigin = self.SetAbstractRoomAndPlacedObjectNumber(self.abstractRoom.name, i);
-
-                }
-            }
-        }
-    }
+  
 
 }
 
