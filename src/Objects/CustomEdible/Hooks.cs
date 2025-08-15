@@ -8,7 +8,7 @@ internal class Hooks
         // Unregister any hooks or cleanup resources here if necessary
         On.Player.Grabability -= Player_Grabability;
     }
-    public static void Init(string guid)
+    public static void Init()
     {
         //Here you can put your custom hooks for your objects
         On.Player.Grabability += Player_Grabability;

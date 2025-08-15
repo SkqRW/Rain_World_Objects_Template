@@ -33,7 +33,7 @@ internal class HookObject
 
     private static void RainWorld_OnModsEnabled(On.RainWorld.orig_OnModsEnabled orig, RainWorld self, ModManager.Mod[] newlyEnabledMods)
     {
-        //Although the original method is empty, other mods can also hook this method, so orig is also required here
+        //Not matter if the original method is empty, put the orig to allow other mods to hook this method and register their own values
         orig(self, newlyEnabledMods);
         Register.RegisterValues();
     }
@@ -48,9 +48,13 @@ internal class HookObject
 
     private static void AbstractPhysicalObject_Realize(On.AbstractPhysicalObject.orig_Realize orig, AbstractPhysicalObject self)
     {
-        orig(self);
+        ODEBUG.LogInfo("Realizing AbstractPhysicalObject of type: " + self.type);
         if (self.type == Register.CustomSpear)
+        {
+            ODEBUG.LogInfo("Realizing CustomSpear object");
             self.realizedObject = new CustomSpear(self, self.world); //Like any physical object, your object will take an abstract object as a parameter.
+        }
+        orig(self);
     }
 
 
@@ -62,7 +66,7 @@ internal class HookObject
         return orig(self, obj);
     }
 
-   
+
     private static void PlacedObject_GenerateEmptyData(On.PlacedObject.orig_GenerateEmptyData orig, PlacedObject self)
     {
         orig(self);
@@ -100,23 +104,25 @@ internal class HookObject
     {
         if (obj == Register.CustomSpear_PO)
         {
-            if (!(room.game.session is StoryGameSession) ||
-                            !(room.game.session as StoryGameSession).saveState.ItemConsumed(room.world, false, room.abstractRoom.index, idx))
+            if (!(room.game.session is StoryGameSession))
             {
-                AbstractPhysicalObject abstractPhysicalObject = new AbstractConsumable(
+                ODEBUG.Log("Loading my custom spear");
+                AbstractPhysicalObject abstractPhysicalObject = new AbstractPhysicalObject(
                     room.world,
                     Register.CustomSpear,
                     null,
                     room.GetWorldCoordinate(room.roomSettings.placedObjects[idx].pos),
-                    room.game.GetNewID(),
-                    room.abstractRoom.index,
-                    idx,
-                    room.roomSettings.placedObjects[idx].data as PlacedObject.ConsumableObjectData);
-                (abstractPhysicalObject as AbstractConsumable).isConsumed = false;
-                room.abstractRoom.AddEntity(abstractPhysicalObject);
+                    room.game.GetNewID()
+                );
+                //look for the diference between entities.add and Addentity
+
+                room.abstractRoom.entities.Add(abstractPhysicalObject);
                 abstractPhysicalObject.placedObjectOrigin = room.SetAbstractRoomAndPlacedObjectNumber(room.abstractRoom.name, idx);
+                abstractPhysicalObject.Realize();
             }
         }
-    }
+    } 
+
+
 }
 

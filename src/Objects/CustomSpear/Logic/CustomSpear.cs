@@ -13,6 +13,7 @@ public partial class CustomSpear : Spear
 
     public CustomSpear(AbstractPhysicalObject abstr, World world) : base(abstr, world)
     {
+        abstractPhysicalObject = abstr as AbstractSpear;
         base.bodyChunks = new BodyChunk[1];
         base.bodyChunks[0] = new BodyChunk(this, 0, new Vector2(0f, 0f), 5.5f, 0.2f);
         bodyChunkConnections = new PhysicalObject.BodyChunkConnection[0];
@@ -46,25 +47,56 @@ public partial class CustomSpear : Spear
     public override void PlaceInRoom(Room placeRoom)
     {
         try
-        { 
-            //The basic method is actually just adding an entity to the room, and you can do it manually if you want
-            base.PlaceInRoom(placeRoom);
-            //Places an object according to the coordinates of its abstractPhysicalObject
-            firstChunk.HardSetPosition(placeRoom.MiddleOfTile(abstractPhysicalObject.pos.Tile));
-            //Custom.RNV() just sets a random direction
-            rotation = Custom.RNV();
-            lastRotation = rotation;
-        }
-        catch(Exception e)
         {
-            ODEBUG.LogWarn(e.Message);
+            ODEBUG.Log("0  placetoom");
+            placeRoom.AddObject(this);
+            ODEBUG.Log("1  placetoom");
+            if (placeRoom.terrain != null)
+            {
+                this.Buried = true;
+            }
+            ODEBUG.Log("2  placetoom");
+            firstChunk.HardSetPosition(placeRoom.MiddleOfTile(abstractPhysicalObject.pos.Tile));
+
+            ODEBUG.Log("3  placetoom");
+            rotation = Custom.RNV();
+            ODEBUG.Log("4  placetoom");
+            lastRotation = rotation;
+            ODEBUG.Log("5  placetoom");
         }
+        catch (Exception e)
+        {
+            ODEBUG.LogWarn("sPEARScUSTOM Here D: " + e.Message);
+        }
+    }
+
+    public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+    {
+        sLeaser.sprites = new FSprite[1];
+        sLeaser.sprites[0] = new FSprite("Circle20") { scale = 1f };
+        UnityEngine.Debug.Log($"Initiating sprites for {this}");
+        AddToContainer(sLeaser, rCam, null);
     }
 
     public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
     {
-        base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
-        sLeaser.sprites[0].color = Color.blue;
+        Vector2 pos = Vector2.Lerp(firstChunk.lastPos, firstChunk.pos, timeStacker);
+        Vector2 rt = Vector3.Slerp(lastRotation, rotation, timeStacker);
+        lastDarkness = darkness;
+        //The formula for determining darkness is a template
+        darkness = rCam.room.Darkness(pos) * (1f - rCam.room.LightSourceExposure(pos));
+        foreach (FSprite sprite in sLeaser.sprites)
+        {
+            sprite.x = pos.x - camPos.x;
+            sprite.y = pos.y - camPos.y;
+            sprite.rotation = Custom.VecToDeg(rt);
+        }
+        //If your object is PlayerCarryableItem, then when approaching an object, it can "flash" in one frame, hinting that it can be grabbed
+        if (blink > 0 && UnityEngine.Random.value < 0.5f)
+            sLeaser.sprites[0].color = blinkColor;
+        else sLeaser.sprites[0].color = color;
+        if (slatedForDeletetion || rCam.room != room)
+            sLeaser.CleanSpritesAndRemove();
     }
 }
 

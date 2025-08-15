@@ -16,6 +16,7 @@ internal class Register
         On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
         On.PlacedObject.ConsumableObjectData.ctor += ConsumableObjectData_ctor;
         On.PlacedObject.GenerateEmptyData += PlacedObject_GenerateEmptyData;
+        Hooks.Init();
     }
 
     public static void Terminate()
@@ -29,6 +30,7 @@ internal class Register
         On.DevInterface.ObjectsPage.CreateObjRep -= ObjectsPage_CreateObjRep;
         On.PlacedObject.ConsumableObjectData.ctor -= ConsumableObjectData_ctor;
         On.PlacedObject.GenerateEmptyData -= PlacedObject_GenerateEmptyData;
+        Hooks.Terminate();
     }
 
     private static void RainWorld_OnModsEnabled(On.RainWorld.orig_OnModsEnabled orig, RainWorld self, ModManager.Mod[] newlyEnabledMods)

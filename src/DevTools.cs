@@ -10,13 +10,13 @@ public partial class DevTools
 {
     public static void Init()
     {
-        //On.Player.Update += PlayerOnUpdate;
+        On.Player.Update += PlayerOnUpdate;
         //On.PlayerGraphics.DrawSprites += VisalFormToSeeIfTheModIsAplyed;
     }
 
     public static void Terminate()
     {
-        //On.Player.Update -= PlayerOnUpdate;
+        On.Player.Update -= PlayerOnUpdate;
         //On.PlayerGraphics.DrawSprites -= VisalFormToSeeIfTheModIsAplyed;
     }
 
@@ -68,7 +68,7 @@ public partial class DevTools
         devTimer++;
 
 
-        if (Input.GetKey(KeyCode.Q) && devTimer > 0)
+        if (Input.GetKey(KeyCode.E) && devTimer > 0)
         {
             AbstractPhysicalObject temp = new AbstractPhysicalObject(
                 self.room.world, 
@@ -77,8 +77,7 @@ public partial class DevTools
                 self.room.GetWorldCoordinate(self.mainBodyChunk.pos), 
                 self.room.game.GetNewID());
 
-            CustomEdible.CustomEdible attemp = new CustomEdible.CustomEdible(temp);
-
+            CustomSpear.CustomSpear attemp = new CustomSpear.CustomSpear(temp, self.room.world);
             attemp.PlaceInRoom(self.room);
             ODEBUG.LogInfo("The object placed in the room");
             SetDevTimer(1);

@@ -3,7 +3,7 @@ Actually, the most worked (and functional) is the CustomEdible object
 
 Work in process
 
-***NOTES:***
+*** NOTES: ***
 
 Personal Templated i used for put custom objects for rain world without using any depedences (so not fisobs here)
 
