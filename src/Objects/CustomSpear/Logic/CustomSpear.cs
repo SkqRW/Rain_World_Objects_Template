@@ -60,6 +60,11 @@ public partial class CustomSpear : Spear
             ODEBUG.LogWarn(e.Message);
         }
     }
-    
+
+    public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+    {
+        base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+        sLeaser.sprites[0].color = Color.blue;
+    }
 }
 

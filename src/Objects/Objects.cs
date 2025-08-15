@@ -7,13 +7,16 @@ public partial class Objects
     public static void Init(string GUID)
     {
         // We used the mod id like a var to register and unregister the objects
-        CustomEdible.Object.Init(GUID);
+        CustomEdible.Register.Init(GUID);
+
+        //CustomSpear.HookObject.Init(GUID);
         On.Room.Loaded += Room_Loaded;
     }
 
     public static void Terminate()
     {
-        CustomEdible.Object.Terminate();
+        CustomEdible.Register.Terminate();
+        //CustomSpear.HookObject.Terminate();
         On.Room.Loaded -= Room_Loaded;
     }
 
@@ -34,8 +37,8 @@ public partial class Objects
             for (int i = 0; i < self.roomSettings.placedObjects.Count; i++)
             {
                 //Make sure that all your custom objects are here
-                CustomEdible.Object.Room_Loaded(self.roomSettings.placedObjects[i].type, self, i);
-                CustomSpear.Object.Room_Loaded(self.roomSettings.placedObjects[i].type, self, i);
+                CustomEdible.Register.Room_Loaded(self.roomSettings.placedObjects[i].type, self, i);
+                CustomSpear.HookObject.Room_Loaded(self.roomSettings.placedObjects[i].type, self, i);
             }
         }
     }

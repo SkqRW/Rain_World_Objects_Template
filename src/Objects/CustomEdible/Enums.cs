@@ -1,6 +1,6 @@
 ﻿namespace CustomEdible;
 
-public static class Register
+public static class Enums
 {
     public static void RegisterValues()
     {

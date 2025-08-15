@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RWCustom;
+using CustomEdible;
 
 namespace Plugin;
 
@@ -71,7 +72,7 @@ public partial class DevTools
         {
             AbstractPhysicalObject temp = new AbstractPhysicalObject(
                 self.room.world, 
-                CustomEdible.Register.CustomEdible, 
+                CustomSpear.Register.CustomSpear,
                 null, 
                 self.room.GetWorldCoordinate(self.mainBodyChunk.pos), 
                 self.room.game.GetNewID());
