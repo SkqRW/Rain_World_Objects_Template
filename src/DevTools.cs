@@ -3,6 +3,8 @@ using RWCustom;
 
 namespace Plugin;
 
+//Custom Function to my own debug
+
 public partial class DevTools
 {
     public static void Init()
