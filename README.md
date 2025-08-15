@@ -1,3 +1,10 @@
+
+Actually, the most worked (and functional) is the CustomEdible object
+
+Work in process
+
+***NOTES:***
+
 Personal Templated i used for put custom objects for rain world without using any depedences (so not fisobs here)
 
 This is an alpha version still, but his custom edible works with his dev tool interfaze, so you can put them in your room there.
