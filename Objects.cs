@@ -34,26 +34,8 @@ public partial class Objects
             for (int i = 0; i < self.roomSettings.placedObjects.Count; i++)
             {
                 //Make sure that all your custom objects are here
-                if (self.roomSettings.placedObjects[i].type == CustomEdible.Register.CustomEdible_PO)
-                {
-                    if (!(self.game.session is StoryGameSession) ||
-                        !(self.game.session as StoryGameSession).saveState.ItemConsumed(self.world, false, self.abstractRoom.index, i))
-                    {
-                        AbstractPhysicalObject abstractPhysicalObject = new AbstractConsumable(
-                            self.world,
-                            CustomEdible.Register.CustomEdible,
-                            null,
-                            self.GetWorldCoordinate(self.roomSettings.placedObjects[i].pos),
-                            self.game.GetNewID(),
-                            self.abstractRoom.index,
-                            i,
-                            self.roomSettings.placedObjects[i].data as PlacedObject.ConsumableObjectData);
-                        (abstractPhysicalObject as AbstractConsumable).isConsumed = false;
-                        self.abstractRoom.AddEntity(abstractPhysicalObject);
-                        abstractPhysicalObject.placedObjectOrigin = self.SetAbstractRoomAndPlacedObjectNumber(self.abstractRoom.name, i);
-
-                    }
-                }
+                CustomEdible.Object.Room_Loaded(self.roomSettings.placedObjects[i].type, self, i);
+                CustomSpear.Object.Room_Loaded(self.roomSettings.placedObjects[i].type, self, i);
             }
         }
     }

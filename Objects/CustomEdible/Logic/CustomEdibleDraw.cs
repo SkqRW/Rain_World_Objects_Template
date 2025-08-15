@@ -38,7 +38,7 @@ public partial class CustomEdible
     public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
     {
         //You don't have to assign a value to this variable, you can specify the colors for each sprite separately
-        color = Color.green;
+        color = Color.blue;
         color = Color.Lerp(color, palette.blackColor, darkness); //The darker it is (the closer the darkness value is to 1f), the darker the sprite will be
         sLeaser.sprites[0].color = color;
     }
